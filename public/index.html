@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Bandari Comprehensive School Management System</title>
+    <style>
+         :root {
+            --bg: #eef1f5;
+            --card: #fff;
+            --ink: #1b2437;
+            --mute: #667085;
+            --line: #e4e8ef;
+            --brand: #0f2a47;
+            --brand2: #17406b;
+            --accent: #c9962b;
+            --ok: #157347;
+            --bad: #b42318;
+            --pri: #1f6f9f;
+            --jss: #6b46a8;
+            --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08)
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        html {
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased
+        }
+        
+        main {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px 24px 64px
+        }
+        
+        h2 {
+            margin: 0 0 16px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -.01em
+        }
+        
+        h3 {
+            margin: 20px 0 10px;
+            font-size: 15px;
+            font-weight: 700
+        }
+        
+        a {
+            color: var(--pri);
+            font-weight: 600;
+            text-decoration: none
+        }
+        
+        a:hover {
+            text-decoration: underline
+        }
+        
+        [hidden] {
+            display: none!important
+        }
+        
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow)
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+            margin-bottom: 16px
+        }
+        
+        .grid .card {
+            margin-bottom: 0
+        }
+        
+        .card.stat,
+        .stat {
+            border-top: 3px solid var(--accent)
+        }
+        
+        .stat b {
+            display: block;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            line-height: 1.2
+        }
+        
+        .stat span {
+            color: var(--mute);
+            font-size: 12.5px;
+            font-weight: 600
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 12px
+        }
+        
+        label {
+            display: flex;
+            flex-direction: column;
+            font-size: 12.5px;
+            color: var(--mute);
+            gap: 5px;
+            font-weight: 600
+        }
+        
+        input,
+        select {
+            font: inherit;
+            font-weight: 400;
+            padding: 9px 11px;
+            border: 1px solid #cfd6e2;
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+            min-width: 0
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--brand2);
+            box-shadow: 0 0 0 3px rgba(23, 64, 107, .15)
+        }
+        
+        button.b {
+            font: inherit;
+            font-weight: 600;
+            background: var(--brand);
+            color: #fff;
+            border: 0;
+            border-radius: 8px;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: background .15s
+        }
+        
+        button.b:hover {
+            background: var(--brand2)
+        }
+        
+        button.b.alt {
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid #cfd6e2
+        }
+        
+        button.b.alt:hover {
+            background: #f5f7fa
+        }
+        
+        button.b.del {
+            background: #fff;
+            color: var(--bad);
+            border: 1px solid #f1c0bb;
+            padding: 5px 10px;
+            font-size: 12.5px
+        }
+        
+        button.b.del:hover {
+            background: #fef3f2
+        }
+        
+        button.b.sm {
+            padding: 5px 10px;
+            font-size: 12.5px
+        }
+        
+        button.wide {
+            width: 100%;
+            padding: 11px
+        }
+        
+        button:focus-visible {
+            outline: 3px solid rgba(201, 150, 43, .5);
+            outline-offset: 1px
+        }
+        
+        .tw {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 10px
+        }
+        
+        .card .tw {
+            margin-top: 4px
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff
+        }
+        
+        th,
+        td {
+            text-align: left;
+            padding: 11px 14px;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap
+        }
+        
+        th {
+            background: #f7f9fc;
+            color: var(--mute);
+            font-weight: 700;
+            font-size: 12.5px
+        }
+        
+        tr:last-child td {
+            border-bottom: 0
+        }
+        
+        table tr:hover td {
+            background: #fafbfd
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #fff
+        }
+        
+        .Primary {
+            background: var(--pri)
+        }
+        
+        .JSS {
+            background: var(--jss)
+        }
+        
+        .pill {
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 600
+        }
+        
+        .pill.Active {
+            background: #dcfce7;
+            color: #14532d
+        }
+        
+        .pill.Transferred,
+        .pill.Pending {
+            background: #fef3c7;
+            color: #78350f
+        }
+        
+        .pill.Withdrawn {
+            background: #fee2e2;
+            color: #7f1d1d
+        }
+        
+        .neg {
+            color: var(--bad);
+            font-weight: 700
+        }
+        
+        .pos {
+            color: var(--ok);
+            font-weight: 700
+        }
+        
+        .empty {
+            color: var(--mute);
+            padding: 28px;
+            text-align: center
+        }
+        
+        .sign {
+            margin-top: 36px;
+            color: var(--mute);
+            font-size: 13px
+        }
+        
+        .chk {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px
+        }
+        
+        .chk label {
+            flex-direction: row;
+            align-items: center;
+            font-weight: 400;
+            color: var(--ink);
+            gap: 6px;
+            font-size: 14px
+        }
+        
+        #toast {
+            position: fixed;
+            bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand);
+            color: #fff;
+            padding: 11px 18px;
+            border-radius: 10px;
+            z-index: 9;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+            font-weight: 500
+        }
+        
+        #shell {
+            display: flex;
+            min-height: 100vh
+        }
+        
+        aside {
+            width: 244px;
+            background: linear-gradient(180deg, var(--brand), #0a1d33);
+            color: #c5d0e0;
+            display: flex;
+            flex-direction: column;
+            padding: 16px 12px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto
+        }
+        
+        aside .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 1.3;
+            padding: 6px 8px 18px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .12)
+        }
+        
+        aside .crest {
+            font-size: 26px
+        }
+        
+        .navlabel {
+            font-size: 12px;
+            color: #7f91ab;
+            padding: 8px 10px 6px;
+            font-weight: 600
+        }
+        
+        aside button {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: none;
+            border: 0;
+            color: inherit;
+            font: inherit;
+            font-weight: 500;
+            text-align: left;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 2px
+        }
+        
+        aside button.on {
+            background: rgba(255, 255, 255, .1);
+            color: #fff;
+            font-weight: 600;
+            box-shadow: inset 3px 0 0 var(--accent)
+        }
+        
+        aside button:hover {
+            background: rgba(255, 255, 255, .07)
+        }
+        
+        .grow {
+            flex: 1
+        }
+        
+        .mainwrap {
+            flex: 1;
+            min-width: 0
+        }
+        
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: 14px 24px;
+            padding-top: calc(14px + env(safe-area-inset-top, 0px))
+        }
+        
+        .top .pt {
+            font-weight: 700;
+            font-size: 16px;
+            margin-right: 14px
+        }
+        
+        .top .pd {
+            color: var(--mute);
+            font-size: 13px
+        }
+        
+        #who {
+            font-size: 13.5px;
+            font-weight: 600
+        }
+        
+        .tag.role {
+            background: var(--accent);
+            margin-left: 8px;
+            text-transform: capitalize
+        }
+        
+        #login {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr
+        }
+        
+        .lbrand {
+            background: linear-gradient(160deg, var(--brand), var(--brand2));
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px
+        }
+        
+        .lbrand .crest {
+            font-size: 56px;
+            margin-bottom: 12px
+        }
+        
+        .lbrand h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            line-height: 1.15;
+            letter-spacing: -.02em
+        }
+        
+        .lbrand p {
+            margin: 0 0 6px;
+            font-size: 16px;
+            opacity: .9
+        }
+        
+        .lbrand small {
+            opacity: .65;
+            font-size: 13px
+        }
+        
+        .lform {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            justify-content: center;
+            max-width: 440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px
+        }
+        
+        .lform h2 {
+            margin: 0
+        }
+        
+        .lform .sub {
+            margin: -8px 0 6px;
+            color: var(--mute)
+        }
+        
+        .seg {
+            display: flex;
+            border: 1px solid #cfd6e2;
+            border-radius: 9px;
+            overflow: hidden
+        }
+        
+        .seg button {
+            flex: 1;
+            border: 0;
+            background: #fff;
+            font: inherit;
+            font-weight: 600;
+            padding: 10px;
+            cursor: pointer
+        }
+        
+        .seg .on {
+            background: var(--brand);
+            color: #fff
+        }
+        
+        .err {
+            color: var(--bad);
+            font-size: 13px;
+            min-height: 18px
+        }
+        
+        .err.good {
+            color: var(--ok)
+        }
+        
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 42, 71, .55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5
+        }
+        
+        .mbox {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            width: min(680px, 94vw);
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .3)
+        }
+        
+        .mbox .x {
+            position: absolute;
+            top: 16px;
+            right: 16px
+        }
+        
+        .bars {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            height: 160px;
+            padding-top: 8px
+        }
+        
+        .bc {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            gap: 2px
+        }
+        
+        .bar {
+            width: 100%;
+            min-height: 3px;
+            border-radius: 6px 6px 0 0
+        }
+        
+        .bc b {
+            font-size: 13px
+        }
+        
+        .bc span {
+            font-size: 12px;
+            color: var(--mute)
+        }
+        
+        table.tt td {
+            min-width: 120px;
+            white-space: normal;
+            vertical-align: top
+        }
+        
+        .letter {
+            display: none
+        }
+        
+        @media(max-width:860px) {
+            #login {
+                grid-template-columns: 1fr
+            }
+            .lbrand {
+                padding: 28px
+            }
+            .lbrand h1 {
+                font-size: 26px
+            }
+            #shell {
+                flex-direction: column
+            }
+            aside {
+                width: auto;
+                height: auto;
+                position: static;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 8px
+            }
+            aside .brand,
+            .grow,
+            .navlabel {
+                display: none
+            }
+            main {
+                padding: 16px
+            }
+        }
+        
+        @media print {
+            aside,
+            .top,
+            .noprint {
+                display: none!important
+            }
+            body {
+                background: #fff;
+                color: #000
+            }
+            .card {
+                border: 0;
+                box-shadow: none;
+                padding: 0
+            }
+            .letter {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                border-bottom: 2px solid #000;
+                padding-bottom: 8px;
+                margin-bottom: 14px
+            }
+            .letter b {
+                font-size: 20px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="login" hidden></div>
+    <div id="shell" hidden>
+        <aside id="side"></aside>
+        <div class="mainwrap">
+            <div class="top"><span id="crumb"></span><span id="who"></span></div>
+            <main id="app"></main>
+        </div>
+    </div>
+    <div id="modal" hidden></div>
+    <div id="toast" role="status" hidden></div>
+    <script>
+        const SCHOOL = "Bandari Comprehensive School";
+        const SUBJ = {
+            Primary: ["English", "Kiswahili", "Mathematics", "Environmental Activities", "Religious Education", "Creative Arts", "Science & Technology", "Agriculture"],
+            JSS: ["English", "Kiswahili", "Mathematics", "Integrated Science", "Social Studies", "Pre-Technical Studies", "Agriculture & Nutrition", "Creative Arts & Sports", "Religious Education"]
+        };
+        const ALLSUBJ = [...new Set([...SUBJ.Primary, ...SUBJ.JSS])];
+        const FEE_ITEMS = ["Tuition", "Exam", "Activities", "Food / Lunch", "Transport", "Boarding", "Uniform", "Books", "Other"];
+        const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"],
+            PER = [1, 2, 3, 4, 5, 6, 7, 8],
+            TERMS = ["Term 1", "Term 2", "Term 3"];
+        let T = sessionStorage.getItem("t") || "",
+            S = null,
+            META = null,
+            tab = "Dashboard",
+            ui = {};
+
+        const $ = id => document.getElementById(id);
+        const v = id => {
+            const e = $(id);
+            return e ? e.value : ""
+        };
+        const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[c]));
+        const ksh = n => "KSh " + Number(n || 0).toLocaleString();
+        const grade = c => +(c.match(/\d/) || [1])[0],
+            sec = c => grade(c) <= 6 ? "Primary" : "JSS";
+        const active = () => S.students.filter(s => s.status === "Active");
+        const classes = () => [...new Set(active().map(s => s.cls))].sort();
+        const paid = id => S.pay.filter(p => p.sid === id).reduce((a, p) => a + p.amt, 0);
+        const owed = s => S.fees[sec(s.cls)],
+            bal = s => owed(s) - paid(s.id);
+        const itemsUsed = l => [...new Set(l.map(p => p.item || "Tuition"))];
+        const itemTotal = (id, i) => S.pay.filter(p => p.sid == id && (p.item || "Tuition") == i).reduce((a, p) => a + p.amt, 0);
+        const paidFor = id => itemsUsed(S.pay.filter(p => p.sid == id)).map(i => esc(i) + ": " + ksh(itemTotal(id, i))).join("; ") || "–";
+
+        function level(pct, section) {
+            if (section === "Primary") return pct >= 75 ? "EE" : pct >= 50 ? "ME" : pct >= 25 ? "AE" : "BE";
+            return pct >= 90 ? "EE1" : pct >= 75 ? "EE2" : pct >= 58 ? "ME1" : pct >= 41 ? "ME2" : pct >= 31 ? "AE1" : pct >= 21 ? "AE2" : pct >= 11 ? "BE1" : "BE2"
+        }
+        const opts = (arr, sel) => arr.map(a => `<option ${a==sel?"selected":""}>${esc(a)}</option>`).join("");
+        const table = (head, rows, id) => rows.length ? `<div class="tw"><table ${id?`id="${id}"`:""}><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`:`<div class="empty">Nothing here yet.</div>`;
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+
+/* ---------- server communication ---------- */
+async function api(path,body){
+ const r=await fetch(path,{method:body?"POST":"GET",headers:{"Content-Type":"application/json",Authorization:"Bearer "+T},body:body?JSON.stringify(body):undefined});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok){if(r.status===401&&T)logout("Please sign in again");throw new Error(j.error||"Something went wrong")}
+ return j}
+async function load(){S=await api("/api/data")}
+async function act(a,d){try{await api("/api/act",{a,...d});await load();render();return true}catch(e){toast(e.message);return false}}
+function logout(msg){if(T)fetch("/api/logout",{method:"POST",headers:{Authorization:"Bearer "+T}}).catch(()=>{});
+ T="";S=null;sessionStorage.removeItem("t");showLogin(msg||"")}
+
+/* ---------- sign in and teacher sign up ---------- */
+async function showLogin(msg,mode,good){
+ if(!META)try{META=await(await fetch("/api/meta")).json()}catch(e){META={classes:[]}}
+ $("shell").hidden=true;const L=$("login");L.hidden=false;const up=mode==="up";
+ L.innerHTML=`<div class="lbrand"><div class="crest">🏫</div><h1>${SCHOOL}</h1><p>School Management Portal</p><small>Primary (Grade 1–6) and Junior School (Grade 7–9)</small></div>
+ <div class="lform"><div class="seg"><button class="${up?"":"on"}" onclick="showLogin('','in')">Sign in</button><button class="${up?"on":""}" onclick="showLogin('','up')">Teacher sign up</button></div>
+ ${up?`<h2>Create teacher account</h2>
+ <label>Full name<input id="rn" autocomplete="name"></label><label>Username<input id="ru" autocomplete="username"></label>
+ <label>Password (8+ characters)<input id="rp" type="password" autocomplete="new-password"></label>
+ <label>Classes you teach</label><div class="chk">${META.classes.map(c=>`<label><input type="checkbox" name="rc" value="${esc(c)}">${esc(c)}</label>`).join("")}</div>
+ <label>Subjects you teach</label><div class="chk">${ALLSUBJ.map(c=>`<label><input type="checkbox" name="rs" value="${esc(c)}">${esc(c)}</label>`).join("")}</div>
+ <button class="b wide" onclick="doReg()">Create account</button><p class="sub" style="margin:0;font-size:13px">The admin must approve your account before you can sign in.</p>`
+ :`<h2>Welcome back</h2><p class="sub">Sign in to continue</p>
+ <label>Username<input id="lu" autocomplete="username"></label>
+ <label>Password<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></label>
+ <button class="b wide" onclick="doLogin()">Sign in</button>`}
+ <div class="err ${good?"good":""}">${esc(msg||"")}</div></div>`}
+const checked=n=>[...document.querySelectorAll(`input[name=${n}]:checked`)].map(i=>i.value);
+const showErr=m=>{document.querySelector(".err").textContent=m};
+async function doReg(){try{await api("/api/register",{name:v("rn"),username:v("ru"),password:v("rp"),classes:checked("rc"),subjects:checked("rs")});
+ showLogin("Account created. Wait for the admin to approve it, then sign in.","in",true)}catch(e){showErr(e.message)}}
+async function doLogin(){try{const j=await api("/api/login",{username:v("lu"),password:v("lp")});T=j.token;sessionStorage.setItem("t",T);start()}catch(e){showErr(e.message)}}
+async function start(){try{await load()}catch(e){return showLogin(e.message)}
+ $("login").hidden=true;$("shell").hidden=false;if(!tabs().includes(tab))tab="Dashboard";render()}
+
+/* ---------- roles ---------- */
+function tabs(){const m=S.me;
+ if(m.role==="admin")return["Dashboard","Students","Attendance","Fees","Staff","Timetable","Marks","Results","Reports"];
+ if(m.role==="bursar")return["Dashboard","Students","Fees","Reports"];
+ return["Dashboard",...(m.ct?["Students","Attendance"]:[]),"Timetable","Marks","Results","Reports","Profile"]}
+const ICON={Dashboard:"🏠",Students:"🎓",Attendance:"✅",Fees:"💰",Staff:"👥",Timetable:"🗓️",Marks:"📝",Results:"📊",Reports:"📄",Profile:"👤"};
+const LABEL={Staff:"Staff & classes",Marks:"Enter marks",Results:"Class results",Profile:"My profile"};
+const myCls=()=>{const m=S.me;return m.role==="admin"?S.classes:[...new Set([...m.classes,m.ct].filter(Boolean))]};
+const roleName=()=>S.me.role==="teacher"&&S.me.ct?"class teacher":S.me.role;
+function render(){
+ $("side").innerHTML=`<div class="brand"><span class="crest">🏫</span><span>${SCHOOL}</span></div><div class="navlabel">Menu</div>`+
+ tabs().map(x=>`<button class="${x==tab?"on":""}" onclick="go('${x}')"><span>${ICON[x]}</span>${LABEL[x]||x}</button>`).join("")+`<div class="grow"></div><button onclick="logout()"><span>🚪</span>Sign out</button>`;
+ $("who").innerHTML=`${esc(S.me.name)}<span class="tag role">${roleName()}</span>`;
+ $("crumb").innerHTML=`<span class="pt">${LABEL[tab]||tab}</span><span class="pd">${new Date().toLocaleDateString("en-KE",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</span>`;
+ $("app").innerHTML=V[tab]()}
+function go(x){tab=x;render()}
+const V={};
+
+/* ---------- dashboard ---------- */
+V.Dashboard=()=>{const m=S.me,a=active(),fin=m.role!=="teacher";
+ const p=a.filter(s=>sec(s.cls)=="Primary").length,j=a.length-p;
+ const out=fin?a.reduce((x,s)=>x+Math.max(0,bal(s)),0):0,col=S.pay.reduce((x,y)=>x+y.amt,0);
+ const today=new Date().toISOString().slice(0,10);let pr=0,tot=0;
+ for(const k in S.att)if(k.startsWith(today))for(const id in S.att[k]){tot++;if(S.att[k][id]!="A")pr++}
+ const c=[[a.length,"Active students"],[p,"Primary"],[j,"JSS"]];
+ if(m.role==="admin")c.push([S.users.filter(u=>u.role==="teacher"&&u.approved).length,"Teachers"],[S.users.filter(u=>!u.approved).length,"Awaiting approval"],[S.marks.length,"Marks entered"]);
+ if(fin)c.push([ksh(col),"Fees collected"],[`<span class="neg">${ksh(out)}</span>`,"Outstanding fees"]);
+ if(m.role!=="bursar")c.push([tot?Math.round(pr/tot*100)+"%":"–","Attendance today"]);
+ if(m.role==="teacher"){c.push([myCls().length,"Classes taught"],[m.subjects.length,"Subjects"],[S.marks.filter(k=>k.by===m.id).length,"Marks entered by me"]);if(m.ct)c.push([esc(m.ct),"Class teacher of"])}
+ return `<h2>Overview</h2><div class="grid">${c.map(x=>`<div class="card stat"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}</div>
+ <h3>Students per class</h3>${table(["Class","Section","Students"],classes().map(k=>[esc(k),`<span class="tag ${sec(k)}">${sec(k)}</span>`,a.filter(s=>s.cls==k).length]))}${chart()}`};
+function chart(){const a=active(),rows=[1,2,3,4,5,6,7,8,9].map(g=>[g,a.filter(s=>grade(s.cls)==g).length]),mx=Math.max(1,...rows.map(r=>r[1]));
+ return `<div class="card" style="margin-top:16px"><h3 style="margin-top:0">Enrolment by grade</h3><div class="bars">${rows.map(r=>`<div class="bc"><b>${r[1]}</b><div class="bar ${sec("Grade "+r[0])}" style="height:${r[1]/mx*100}%"></div><span>G${r[0]}</span></div>`).join("")}</div></div>`}
+
+/* ---------- students ---------- */
+V.Students=()=>{const m=S.me,edit=m.role==="admin"||(m.role==="teacher"&&m.ct),cs=m.role==="admin"?S.classes:[m.ct];
+ const f=ui.sf||"All",q=(ui.q||"").toLowerCase();
+ const list=S.students.filter(s=>(m.role!=="teacher"||s.cls===m.ct)&&(f=="All"||sec(s.cls)==f)&&(s.name+s.adm).toLowerCase().includes(q));
+ return `<h2>Students${m.role==="teacher"?" – "+esc(m.ct):""}</h2>
+ ${edit?`<div class="card noprint"><h3 style="margin-top:0">Register student</h3><div class="row">
+ <label>Full name<input id="n"></label><label>Gender<select id="g"><option>F</option><option>M</option></select></label>
+ <label>Class<select id="gc">${opts(cs)}</select></label><label>Parent/guardian<input id="pg"></label><label>Phone<input id="ph"></label>
+ <button class="b" onclick="act('student.add',{name:v('n'),gender:v('g'),cls:v('gc'),guardian:v('pg'),phone:v('ph')}).then(o=>o&&toast('Student registered'))">Register</button></div></div>`:""}
+ <div class="row noprint"><label>Search<input value="${esc(ui.q||"")}" onchange="ui.q=this.value;render()" placeholder="Name or adm no."></label>
+ <label>Section<select onchange="ui.sf=this.value;render()">${opts(["All","Primary","JSS"],f)}</select></label></div>
+ ${table(["Adm no.","Name","Class","Section","Guardian","Status",""],list.map(s=>[s.adm,`<a href="#" onclick="profile(${s.id});return false">${esc(s.name)}</a>`,esc(s.cls),`<span class="tag ${sec(s.cls)}">${sec(s.cls)}</span>`,esc(s.guardian)+" "+esc(s.phone),`<span class="pill ${s.status}">${s.status}</span>`,
+ edit?`<span class="noprint">${s.status=="Active"?`<button class="b alt sm" onclick="act('student.status',{id:${s.id},status:'Transferred'})">Transfer</button> <button class="b alt sm" onclick="act('student.status',{id:${s.id},status:'Withdrawn'})">Withdraw</button>`:`<button class="b alt sm" onclick="act('student.status',{id:${s.id},status:'Active'})">Reinstate</button>`}${m.role==="admin"?` <button class="b del" onclick="if(confirm('Delete this student and their records?'))act('student.del',{id:${s.id}})">Delete</button>`:""}</span>`:""]))}`};
+function profile(id){const s=S.students.find(x=>x.id==id);if(!s)return;const m=S.marks.filter(k=>k.sid==id),fin=S.me.role==="admin"||S.me.role==="bursar";let p=0,n=0;
+ for(const k in S.att)if(S.att[k][id]){n++;if(S.att[k][id]!="A")p++}
+ $("modal").innerHTML=`<div class="mbox"><button class="b alt x" onclick="closeM()">Close</button><h2>${esc(s.name)}</h2>
+ <p>${s.adm} – ${esc(s.cls)} <span class="tag ${sec(s.cls)}">${sec(s.cls)}</span> <span class="pill ${s.status}">${s.status}</span></p>
+ <div class="grid">${fin?`<div class="card stat"><b>${ksh(bal(s))}</b><span>Fee balance</span></div>`:""}<div class="card stat"><b>${n?Math.round(p/n*100)+"%":"–"}</b><span>Attendance</span></div><div class="card stat"><b>${m.length}</b><span>Assessments</span></div></div>
+ <h3>Parent/guardian</h3><p>${esc(s.guardian)} ${esc(s.phone)}</p>
+ ${fin?`<h3>Fees paid for</h3>${table(["Paid for","Total paid"],itemsUsed(S.pay.filter(q=>q.sid==id)).map(i=>[esc(i),ksh(itemTotal(id,i))]))}`:""}
+ <h3>Results</h3>${table(["Subject","Term","Assessment","Score","Level"],m.map(k=>[esc(k.sub),k.term,esc(k.ass),k.score,level(k.score,sec(s.cls))]))}</div>`;
+ $("modal").hidden=false}
+function closeM(){$("modal").hidden=true}
+
+/* ---------- attendance (admin and class teacher) ---------- */
+V.Attendance=()=>{const cs=S.me.role==="admin"?S.classes:[S.me.ct];ui.ac=cs.includes(ui.ac)?ui.ac:cs[0];ui.ad=ui.ad||new Date().toISOString().slice(0,10);
+ const rec=S.att[ui.ad+"|"+ui.ac]||{},kids=active().filter(s=>s.cls==ui.ac);
+ return `<h2>Attendance</h2><div class="card"><div class="row">
+ <label>Class<select onchange="ui.ac=this.value;render()">${opts(cs,ui.ac)}</select></label>
+ <label>Date<input type="date" value="${ui.ad}" onchange="ui.ad=this.value;render()"></label>
+ <button class="b alt" onclick="document.querySelectorAll('input[value=P]').forEach(i=>i.checked=true)">All present</button><button class="b" onclick="saveAtt()">Save attendance</button></div>
+ ${table(["Student","Present","Absent","Late"],kids.map(s=>[esc(s.name),...["P","A","L"].map(x=>`<input type="radio" name="a${s.id}" value="${x}" ${(rec[s.id]||"P")==x?"checked":""}>`)]))}</div>`};
+function saveAtt(){const rec={};active().filter(s=>s.cls==ui.ac).forEach(s=>{const c=document.querySelector(`input[name="a${s.id}"]:checked`);rec[s.id]=c?c.value:"P"});
+ act("att.save",{cls:ui.ac,date:ui.ad,rec}).then(o=>o&&toast("Attendance saved"))}
+
+/* ---------- fees (admin and bursar) ---------- */
+V.Fees=()=>{const a=active();ui.fs=a.some(x=>x.id==ui.fs)?ui.fs:(a[0]&&a[0].id);const s=a.find(x=>x.id==ui.fs);
+ return `<h2>Fees</h2><div class="card"><h3 style="margin-top:0">Fee structure (per year)</h3><div class="row">
+ <label>Primary<input id="fp" type="number" value="${S.fees.Primary}"></label><label>JSS<input id="fj" type="number" value="${S.fees.JSS}"></label>
+ <button class="b" onclick="act('fees.set',{Primary:v('fp'),JSS:v('fj')}).then(o=>o&&toast('Fee structure saved'))">Save</button><button class="b alt" onclick="downloadFees()">Download fee structure</button></div></div>
+ <div class="card"><h3 style="margin-top:0">Student fee account</h3>
+ ${s?`<div class="row"><label>Student<select onchange="ui.fs=+this.value;render()">${a.map(x=>`<option value="${x.id}" ${x.id==ui.fs?"selected":""}>${esc(x.name)} – ${esc(x.cls)}</option>`).join("")}</select></label></div>
+ <p style="margin:0 0 12px;color:var(--mute)">Parent/guardian: <b style="color:var(--ink)">${esc(s.guardian)||"–"}</b> &nbsp; Phone: <b style="color:var(--ink)">${esc(s.phone)||"–"}</b></p>
+ <div class="grid"><div class="card stat"><b>${ksh(owed(s))}</b><span>Total fees</span></div><div class="card stat"><b>${ksh(paid(s.id))}</b><span>Amount paid</span></div><div class="card stat"><b class="${bal(s)>0?"neg":"pos"}">${ksh(bal(s))}</b><span>Balance</span></div></div>
+ <div class="row"><label>Paid for<select id="pi">${opts(FEE_ITEMS)}</select></label><label>Or type another purpose<input id="po" placeholder="e.g. Science fair"></label><label>Amount<input id="pa" type="number" min="1"></label><label>Reference<input id="pr" placeholder="M-PESA code"></label><button class="b" onclick="addPay()">Record payment</button></div>
+ <h3>Paid by item</h3>${table(["Item","Total paid"],itemsUsed(S.pay.filter(p=>p.sid==s.id)).map(i=>[esc(i),ksh(itemTotal(s.id,i))]))}
+ <h3>Payment history</h3>${table(["Date","Paid for","Reference","Amount","Recorded by"],S.pay.filter(p=>p.sid==s.id).map(p=>[p.date,esc(p.item||"Tuition"),esc(p.ref),ksh(p.amt),esc(p.by)]))}
+ <div class="row noprint" style="margin-top:12px"><button class="b alt" onclick="openStatement(${s.id})">Open parent fee statement</button></div>`:`<div class="empty">Register a student first.</div>`}</div>`};
+function addPay(){const amt=+v("pa");if(!(amt>0))return toast("Enter an amount");
+ act("pay.add",{sid:ui.fs,amt,item:v("po").trim()||v("pi"),ref:v("pr")}).then(o=>o&&toast("Payment recorded"))}
+function openStatement(id){ui.rr="Parent fee statement";ui.rs=id;go("Reports")}
+function saveBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+const toCsv=rows=>"\ufeff"+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+function downloadFees(){const rows=[[SCHOOL],["Fee structure (per year)"],["Date",new Date().toLocaleDateString()],[],["Grade","Section","Annual fee (KSh)"]];
+ for(let g=1;g<=9;g++)rows.push(["Grade "+g,sec("Grade "+g),S.fees[sec("Grade "+g)]]);
+ saveBlob(new Blob([toCsv(rows)],{type:"text/csv;charset=utf-8"}),"fee-structure.csv")}
+
+/* ---------- staff, classes, teacher approval (admin) ---------- */
+V.Staff=()=>{const pend=S.users.filter(u=>!u.approved).length;
+ return `<h2>Staff & classes</h2>${pend?`<div class="card" style="border-color:var(--accent)"><b>${pend} teacher account${pend>1?"s":""} waiting for approval.</b> Approve them below.</div>`:""}
+ <div class="card">${table(["Name","Username","Role","Classes","Subjects","Class teacher of","Status",""],S.users.map(u=>[esc(u.name),esc(u.username),u.role,esc(u.classes.join(", ")),esc(u.subjects.join(", ")),
+ u.role==="teacher"?`<select onchange="act('user.set',{id:${u.id},ct:this.value})"><option value="">None</option>${S.classes.map(c=>`<option ${u.ct==c?"selected":""}>${esc(c)}</option>`).join("")}</select>`:"–",
+ `<span class="pill ${u.approved?"Active":"Pending"}">${u.approved?"Active":"Pending"}</span>`,
+ u.id===1?"":`<button class="b alt sm" onclick="act('user.set',{id:${u.id},approved:${!u.approved}})">${u.approved?"Disable":"Approve"}</button> <button class="b alt sm" onclick="resetPw(${u.id})">Reset password</button> <button class="b del" onclick="if(confirm('Remove this account?'))act('user.del',{id:${u.id}})">Remove</button>`]))}</div>
+ <div class="card"><h3 style="margin-top:0">Add a staff account</h3><div class="row"><label>Full name<input id="un"></label><label>Username<input id="uu"></label><label>Password<input id="up" type="password"></label>
+ <label>Role<select id="ur"><option value="teacher">Teacher</option><option value="bursar">Bursar</option></select></label>
+ <button class="b" onclick="act('user.add',{name:v('un'),username:v('uu'),password:v('up'),role:v('ur')}).then(o=>o&&toast('Account added'))">Add account</button></div></div>
+ <div class="card"><h3 style="margin-top:0">Add a class or stream</h3><div class="row"><label>Name (e.g. Grade 6A)<input id="cn"></label>
+ <button class="b" onclick="act('class.add',{name:v('cn')}).then(o=>o&&toast('Class added'))">Add class</button></div></div>${pwCard()}`};
+function resetPw(id){const p=prompt("New password for this user (8+ characters):");if(p)act("user.pw",{id,password:p}).then(o=>o&&toast("Password reset"))}
+const pwCard=()=>`<div class="card"><h3 style="margin-top:0">Change my password</h3><div class="row"><label>Current<input id="po2" type="password"></label><label>New (8+ characters)<input id="pn" type="password"></label>
+ <button class="b" onclick="act('me.pw',{old:v('po2'),new:v('pn')}).then(o=>o&&toast('Password changed'))">Change password</button></div></div>`;
+
+/* ---------- teacher profile ---------- */
+V.Profile=()=>{const m=S.me;return `<h2>My profile</h2><div class="card"><h3 style="margin-top:0">Classes and subjects I teach</h3>
+ ${m.ct?`<p>You are the class teacher of <b>${esc(m.ct)}</b>.</p>`:""}
+ <label>Classes</label><div class="chk">${S.classes.map(c=>`<label><input type="checkbox" name="pc" value="${esc(c)}" ${m.classes.includes(c)?"checked":""}>${esc(c)}</label>`).join("")}</div>
+ <p></p><label>Subjects</label><div class="chk">${ALLSUBJ.map(c=>`<label><input type="checkbox" name="ps" value="${esc(c)}" ${m.subjects.includes(c)?"checked":""}>${esc(c)}</label>`).join("")}</div>
+ <p><button class="b" onclick="act('me.set',{classes:checked('pc'),subjects:checked('ps')}).then(o=>o&&toast('Profile saved'))">Save profile</button></p></div>${pwCard()}`};
+
+/* ---------- timetable ---------- */
+V.Timetable=()=>{const cs=S.me.role==="admin"?S.classes:(myCls().length?myCls():S.classes);ui.tc=cs.includes(ui.tc)?ui.tc:cs[0];
+ const adm=S.me.role==="admin",rows=S.tt.filter(x=>x.cls===ui.tc);
+ const cell=(d,p)=>{const x=rows.find(r=>r.day===d&&r.period===p);return x?`<b>${esc(x.subject)}</b><br><small>${esc(x.teacher)} ${esc(x.room)}</small>`+(adm?` <a href="#" onclick="act('tt.del',{id:${x.id});return false">×</a>`:""):""};
+ const teachers=(S.users||[]).filter(u=>u.role==="teacher"&&u.approved).map(u=>u.name);
+ return `<h2>Timetable</h2><div class="card"><div class="row"><label>Class<select onchange="ui.tc=this.value;render()">${opts(cs,ui.tc)}</select></label></div>
+ <div class="tw"><table class="tt"><tr><th>Period</th>${DAYS.map(d=>`<th>${d}</th>`).join("")}</tr>${PER.map(p=>`<tr><th>${p}</th>${DAYS.map(d=>`<td>${cell(d,p)}</td>`).join("")}</tr>`).join("")}</table></div></div>
+ ${adm?`<div class="card noprint"><h3 style="margin-top:0">Add lesson</h3><div class="row">
+ <label>Day<select id="td">${opts(DAYS)}</select></label><label>Period<select id="tp">${opts(PER)}</select></label>
+ <label>Subject<input id="tsb"></label><label>Teacher<select id="tte"><option value="">–</option>${opts(teachers)}</select></label><label>Room<input id="trm" size="6"></label>
+ <button class="b" onclick="act('tt.add',{cls:ui.tc,day:v('td'),period:+v('tp'),subject:v('tsb'),teacher:v('tte'),room:v('trm')})">Add lesson</button></div></div>`:""}`};
+
+/* ---------- marks entry (subject teachers and admin) ---------- */
+V.Marks=()=>{const m=S.me,cs=myCls();
+ if(!cs.length)return `<h2>Enter marks</h2><div class="empty">No classes on your profile yet. Add them under My profile.</div>`;
+ ui.mc=cs.includes(ui.mc)?ui.mc:cs[0];
+ const sub=m.role==="admin"?SUBJ[sec(ui.mc)]:m.subjects;
+ if(!sub.length)return `<h2>Enter marks</h2><div class="empty">Add the subjects you teach under My profile.</div>`;
+ ui.ms=sub.includes(ui.ms)?ui.ms:sub[0];ui.mt=ui.mt||"Term 1";ui.me=ui.me||"End of term";
+ const kids=active().filter(s=>s.cls==ui.mc),sc=sec(ui.mc);
+ const get=id=>S.marks.find(k=>k.sid==id&&k.cls==ui.mc&&k.sub==ui.ms&&k.term==ui.mt&&k.ass==ui.me&&(m.role==="admin"||k.by===m.id));
+ return `<h2>Enter marks</h2><div class="card"><div class="row">
+ <label>Class<select onchange="ui.mc=this.value;render()">${opts(cs,ui.mc)}</select></label>
+ <label>Subject<select onchange="ui.ms=this.value;render()">${opts(sub,ui.ms)}</select></label>
+ <label>Term<select onchange="ui.mt=this.value;render()">${opts(TERMS,ui.mt)}</select></label>
+ <label>Assessment<input value="${esc(ui.me)}" onchange="ui.me=this.value;render()"></label><button class="b" onclick="saveMarks()">Save results</button></div>
+ ${table(["Student","Score (0–100)","Level","Teacher comment"],kids.map(s=>{const k=get(s.id);return [esc(s.name),`<input type="number" min="0" max="100" id="m${s.id}" value="${k?k.score:""}" style="width:80px">`,k?`<b>${level(k.score,sc)}</b>`:"–",`<input id="c${s.id}" value="${esc(k?k.comment:"")}">`]}))}</div>
+ <p style="color:var(--mute);font-size:13px">${sc=="Primary"?"Primary uses four levels: EE, ME, AE, BE.":"JSS uses eight levels: EE1 to BE2."} Saved marks appear in Class results for the class teacher and the admin.</p>`};
+function saveMarks(){const rows=active().filter(s=>s.cls==ui.mc).map(s=>({sid:s.id,score:v("m"+s.id),comment:v("c"+s.id)}));
+ act("marks.save",{cls:ui.mc,sub:ui.ms,term:ui.mt,ass:ui.me,rows}).then(o=>o&&toast("Results saved"))}
+
+/* ---------- class results (class teacher and admin see every subject) ---------- */
+V.Results=()=>{const cs=myCls();if(!cs.length)return `<h2>Class results</h2><div class="empty">No classes to show.</div>`;
+ ui.rk=cs.includes(ui.rk)?ui.rk:cs[0];ui.rt=ui.rt||"Term 1";
+ const kids=active().filter(s=>s.cls==ui.rk),ms=S.marks.filter(k=>k.cls==ui.rk&&k.term==ui.rt),subs=[...new Set(ms.map(k=>k.sub))].sort();
+ const avg=(id,b)=>{const x=ms.filter(k=>k.sid==id&&k.sub==b);return x.length?Math.round(x.reduce((a,k)=>a+k.score,0)/x.length):null};
+ const rows=kids.map(s=>{const sc=subs.map(b=>avg(s.id,b)),f=sc.filter(x=>x!=null);return{s,sc,mean:f.length?Math.round(f.reduce((a,b)=>a+b,0)/f.length):null}}).sort((a,b)=>(b.mean??-1)-(a.mean??-1));
+ const by=b=>[...new Set(ms.filter(k=>k.sub==b).map(k=>k.byName))].join(", "),section=sec(ui.rk);
+ return `<h2>Class results</h2><div class="card"><div class="row"><label>Class<select onchange="ui.rk=this.value;render()">${opts(cs,ui.rk)}</select></label>
+ <label>Term<select onchange="ui.rt=this.value;render()">${opts(TERMS,ui.rt)}</select></label><button class="b alt" onclick="exportTable('rs','results-'+ui.rk+'-'+ui.rt)">Download Excel (CSV)</button></div>
+ ${subs.length?table(["Rank","Student",...subs.map(b=>`<span title="Entered by ${esc(by(b))}">${esc(b)}</span>`),"Mean","Level"],rows.map((r,i)=>[r.mean==null?"–":i+1,esc(r.s.name),...r.sc.map(x=>x==null?"–":x+" "+level(x,section)),r.mean==null?"–":`<b>${r.mean}</b>`,r.mean==null?"–":`<b>${level(r.mean,section)}</b>`]),"rs"):`<div class="empty">No marks entered for this class and term yet.</div>`}</div>
+ <p style="color:var(--mute);font-size:13px">Hover over a subject heading to see which teacher entered it.</p>`};
+function exportTable(id,name){const t=$(id);if(!t)return toast("Nothing to download yet");
+ saveBlob(new Blob([toCsv([...t.querySelectorAll("tr")].map(r=>[...r.children].map(c=>c.textContent.trim())))],{type:"text/csv;charset=utf-8"}),name+".csv")}
+
+/* ---------- reports ---------- */
+const REPORTS_BY={admin:["Student list","Class list","Attendance report","Academic report","Fee statements","Parent fee statement","Fees by item","Fee arrears","Teacher report","School performance"],
+bursar:["Student list","Class list","Fee statements","Parent fee statement","Fees by item","Fee arrears"],
+teacher:["Student list","Class list","Attendance report","Academic report"]};
+V.Reports=()=>{const R=REPORTS_BY[S.me.role];ui.rr=R.includes(ui.rr)?ui.rr:R[0];
+ const cs=["All classes",...(S.me.role==="teacher"?myCls():classes())];ui.rc=cs.includes(ui.rc)?ui.rc:"All classes";
+ ui.rs=active().some(x=>x.id==ui.rs)?ui.rs:(active()[0]&&active()[0].id);
+ const kids=active().filter(s=>ui.rc=="All classes"||s.cls==ui.rc);let body="";
+ const att=id=>{let p=0,t=0;for(const k in S.att)if(S.att[k][id]){t++;if(S.att[k][id]!="A")p++}return t?Math.round(p/t*100)+"%":"–"};
+ const bl=s=>`<span class="${bal(s)>0?"neg":"pos"}">${ksh(bal(s))}</span>`;
+ switch(ui.rr){
+ case"Student list":body=table(["Adm no.","Name","Class","Section","Status"],S.students.map(s=>[s.adm,esc(s.name),esc(s.cls),sec(s.cls),s.status]));break;
+ case"Class list":body=table(["Adm no.","Name","Gender","Class","Guardian"],kids.map(s=>[s.adm,esc(s.name),s.gender,esc(s.cls),esc(s.guardian)]));break;
+ case"Attendance report":body=table(["Student","Class","Attendance rate"],kids.map(s=>[esc(s.name),esc(s.cls),att(s.id)]));break;
+ case"Academic report":body=table(["Student","Class","Subject","Term","Assessment","Score","Level","Comment"],S.marks.filter(m=>kids.some(s=>s.id==m.sid)).map(m=>{const s=S.students.find(x=>x.id==m.sid);return [esc(s.name),esc(s.cls),esc(m.sub),m.term,esc(m.ass),m.score,level(m.score,sec(s.cls)),esc(m.comment)]}));break;
+ case"Fee statements":body=table(["Student","Class","Parent/guardian","Phone","Paid for","Total","Paid","Balance"],kids.map(s=>[esc(s.name),esc(s.cls),esc(s.guardian),esc(s.phone),paidFor(s.id),ksh(owed(s)),ksh(paid(s.id)),bl(s)]));break;
+ case"Parent fee statement":{const s=S.students.find(x=>x.id==ui.rs);
+  if(!s){body=`<div class="empty">Register a student first.</div>`;break}
+  const ps=S.pay.filter(p=>p.sid==s.id);
+  body=table(["Student","Admission no.","Class","Parent/guardian","Phone"],[[esc(s.name),s.adm,esc(s.cls),esc(s.guardian),esc(s.phone)]])
+  +`<h3>What the parent has paid for</h3>`+table(["Paid for","Total paid"],itemsUsed(ps).map(i=>[esc(i),ksh(itemTotal(s.id,i))]))
+  +`<h3>Payment history</h3>`+table(["Date","Paid for","Reference","Amount"],ps.map(p=>[p.date,esc(p.item||"Tuition"),esc(p.ref),ksh(p.amt)]))
+  +`<h3>Summary</h3>`+table(["Annual fee","Total paid","Balance"],[[ksh(owed(s)),ksh(paid(s.id)),bl(s)]])
+  +`<p class="sign">Bursar signature: ______________________ &nbsp;&nbsp; Date: ______________</p>`;break}
+ case"Fees by item":body=table(["Paid for","Payments","Total collected"],itemsUsed(S.pay).map(i=>{const ps=S.pay.filter(p=>(p.item||"Tuition")==i);return [esc(i),ps.length,ksh(ps.reduce((a,p)=>a+p.amt,0))]}));break;
+ case"Fee arrears":body=table(["Student","Class","Parent/guardian","Phone","Paid for","Balance"],kids.filter(s=>bal(s)>0).sort((a,b)=>bal(b)-bal(a)).map(s=>[esc(s.name),esc(s.cls),esc(s.guardian),esc(s.phone),paidFor(s.id),`<span class="neg">${ksh(bal(s))}</span>`]));break;
+ case"Teacher report":body=table(["Name","Username","Classes","Subjects","Class teacher of"],S.users.filter(u=>u.role==="teacher").map(u=>[esc(u.name),esc(u.username),esc(u.classes.join(", ")),esc(u.subjects.join(", ")),esc(u.ct||"–")]));break;
+ case"School performance":body=table(["Section","Students","Average score","Level"],["Primary","JSS"].map(x=>{const ids=active().filter(s=>sec(s.cls)==x).map(s=>s.id),m=S.marks.filter(k=>ids.includes(k.sid)),a=m.length?Math.round(m.reduce((q,k)=>q+k.score,0)/m.length):null;return [x,ids.length,a==null?"–":a,a==null?"–":level(a,x)]}));break}
+ const pick=ui.rr=="Parent fee statement"?`<label>Student<select onchange="ui.rs=+this.value;render()">${active().map(x=>`<option value="${x.id}" ${x.id==ui.rs?"selected":""}>${esc(x.name)} – ${esc(x.cls)}</option>`).join("")}</select></label>`:"";
+ return `<h2>Reports</h2><div class="card noprint"><div class="row"><label>Report<select onchange="ui.rr=this.value;render()">${opts(R,ui.rr)}</select></label>${pick}
+ <label>Class<select onchange="ui.rc=this.value;render()">${opts(cs,ui.rc)}</select></label></div>
+ <div class="row"><button class="b" onclick="downloadReport()">Download Excel (CSV)</button><button class="b" onclick="downloadReportDoc()">Download Word</button><button class="b alt" onclick="window.print()">Download PDF / Print</button></div></div>
+ <div class="card"><div class="letter"><b>${SCHOOL}</b><span>${new Date().toLocaleDateString()}</span></div><h3 style="margin-top:0">${esc(repTitle())}</h3><div id="repbody">${body}</div></div>`};
+function repTitle(){if(ui.rr=="Parent fee statement"){const s=S.students.find(x=>x.id==ui.rs);return ui.rr+(s?" - "+s.name:"")}return ui.rr+(ui.rc!="All classes"?" - "+ui.rc:"")}
+function repFile(){return repTitle().toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+new Date().toISOString().slice(0,10)}
+function downloadReport(){if(!document.querySelector("#repbody table"))return toast("Nothing to download for this report yet");
+ const rows=[[SCHOOL],[repTitle()],["Generated",new Date().toLocaleString()],[]];
+ document.querySelectorAll("#repbody table").forEach(t=>{t.querySelectorAll("tr").forEach(tr=>rows.push([...tr.children].map(c=>c.textContent.trim())));rows.push([])});
+ saveBlob(new Blob([toCsv(rows)],{type:"text/csv;charset=utf-8"}),repFile()+".csv");toast("Report downloaded")}
+function downloadReportDoc(){const el=$("repbody");if(!el||!el.querySelector("table"))return toast("Nothing to download for this report yet");
+ const html='<html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%;margin-bottom:10px}th,td{border:1px solid #999;padding:5px 8px;font-size:11pt;text-align:left}th{background:#e8edf3}</style></head><body><h2>'+esc(SCHOOL)+'</h2><h3>'+esc(repTitle())+'</h3><p>Generated '+new Date().toLocaleString()+'</p>'+el.innerHTML+'</body></html>';
+ saveBlob(new Blob(["\ufeff"+html],{type:"application/msword"}),repFile()+".doc");toast("Report downloaded")}
+
+if(T)start();else showLogin("");
+    </script>
+</body>
+
+</html>
