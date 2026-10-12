@@ -599,6 +599,209 @@
         .letter {
             display: none
         }
+        /* ---------- result slip (Learner Assessment Report) ---------- */
+        
+        .slip {
+            background: #fff;
+            color: #111;
+            border: 1px solid #cfd6e2;
+            border-top: 5px solid #000;
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin: 0 auto 18px;
+            max-width: 820px;
+            font: 13px/1.35 Arial, Helvetica, sans-serif;
+            page-break-after: always;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact
+        }
+        
+        .sl-h {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+            flex-wrap: wrap
+        }
+        
+        .sl-logo {
+            width: 110px;
+            border: 2px solid #7ccfc0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            text-align: center;
+            padding: 6px
+        }
+        
+        .sl-logo small {
+            font-size: 9px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-top: 4px
+        }
+        
+        .sl-mid {
+            flex: 1;
+            min-width: 200px;
+            text-align: center
+        }
+        
+        .sl-mid h1 {
+            font-size: 16px;
+            margin: 2px 0 16px;
+            text-transform: uppercase;
+            letter-spacing: .02em
+        }
+        
+        .sl-ban {
+            background: #0a9f86;
+            color: #fff;
+            font-weight: 700;
+            padding: 6px 18px;
+            display: inline-block;
+            letter-spacing: .03em
+        }
+        
+        .sl-ch {
+            width: 300px;
+            max-width: 100%;
+            border: 1px solid #bfe6dd;
+            border-radius: 14px;
+            padding: 4px 6px
+        }
+        
+        .sl-ch .ct,
+        .sl-bars .ct {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600
+        }
+        
+        .sl-name {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 4px 14px;
+            margin: 10px 0
+        }
+        
+        .sl-name b {
+            font-size: 14px
+        }
+        
+        .sl-two {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 12px;
+            margin-bottom: 10px
+        }
+        
+        .sl-two>div {
+            border-left: 2px solid #222;
+            padding-left: 10px
+        }
+        
+        .sl-two h4 {
+            margin: 0 0 4px;
+            font-size: 13px;
+            text-transform: uppercase
+        }
+        
+        .sl-kv {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px 22px
+        }
+        
+        .slip .sl-tbl {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 3px;
+            font-size: 12.5px;
+            background: none
+        }
+        
+        .slip .sl-tbl th {
+            background: #0a9f86;
+            color: #fff;
+            padding: 7px 6px;
+            font-size: 12.5px;
+            white-space: normal
+        }
+        
+        .slip .sl-tbl td {
+            background: #f4f6f6;
+            padding: 6px;
+            border: 0;
+            white-space: normal
+        }
+        
+        .slip .sl-tbl tr:hover td {
+            background: #f4f6f6
+        }
+        
+        .sl-cm {
+            display: flex;
+            gap: 10px;
+            margin: 8px 0;
+            align-items: baseline
+        }
+        
+        .sl-cm b {
+            width: 140px;
+            text-align: right;
+            flex: none
+        }
+        
+        .sl-cm span {
+            flex: 1;
+            border-bottom: 1px solid #222;
+            padding-bottom: 1px
+        }
+        
+        .sl-bars {
+            border: 1px solid #bfe6dd;
+            border-radius: 14px;
+            padding: 6px 10px;
+            margin-top: 10px
+        }
+        
+        .sl-sig {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 14px;
+            text-align: center
+        }
+        
+        .sl-sig div {
+            border-top: 1px solid #222;
+            padding-top: 4px
+        }
+        
+        .sl-dt {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px
+        }
+        
+        .sl-ft {
+            background: #0a9f86;
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
+            padding: 6px;
+            margin: 14px -16px -14px;
+            font-size: 12px
+        }
         
         @media(max-width:860px) {
             #login {
@@ -629,9 +832,16 @@
             main {
                 padding: 16px
             }
+            .sl-two {
+                grid-template-columns: 1fr
+            }
         }
         
         @media print {
+            @page {
+                size: A4;
+                margin: 8mm
+            }
             aside,
             .top,
             .noprint {
@@ -656,6 +866,13 @@
             }
             .letter b {
                 font-size: 20px
+            }
+            .slip {
+                border: 0;
+                border-top: 5px solid #000;
+                max-width: none;
+                margin: 0;
+                border-radius: 0
             }
         }
     </style>
@@ -874,7 +1091,7 @@ V.Profile=()=>{const m=S.me;return `<h2>My profile</h2><div class="card"><h3 sty
 /* ---------- timetable ---------- */
 V.Timetable=()=>{const cs=S.me.role==="admin"?S.classes:(myCls().length?myCls():S.classes);ui.tc=cs.includes(ui.tc)?ui.tc:cs[0];
  const adm=S.me.role==="admin",rows=S.tt.filter(x=>x.cls===ui.tc);
- const cell=(d,p)=>{const x=rows.find(r=>r.day===d&&r.period===p);return x?`<b>${esc(x.subject)}</b><br><small>${esc(x.teacher)} ${esc(x.room)}</small>`+(adm?` <a href="#" onclick="act('tt.del',{id:${x.id});return false">×</a>`:""):""};
+ const cell=(d,p)=>{const x=rows.find(r=>r.day===d&&r.period===p);return x?`<b>${esc(x.subject)}</b><br><small>${esc(x.teacher)} ${esc(x.room)}</small>`+(adm?` <a href="#" onclick="act('tt.del',{id:${x.id}});return false">×</a>`:""):""};
  const teachers=(S.users||[]).filter(u=>u.role==="teacher"&&u.approved).map(u=>u.name);
  return `<h2>Timetable</h2><div class="card"><div class="row"><label>Class<select onchange="ui.tc=this.value;render()">${opts(cs,ui.tc)}</select></label></div>
  <div class="tw"><table class="tt"><tr><th>Period</th>${DAYS.map(d=>`<th>${d}</th>`).join("")}</tr>${PER.map(p=>`<tr><th>${p}</th>${DAYS.map(d=>`<td>${cell(d,p)}</td>`).join("")}</tr>`).join("")}</table></div></div>
@@ -910,16 +1127,93 @@ V.Results=()=>{const cs=myCls();if(!cs.length)return `<h2>Class results</h2><div
  const rows=kids.map(s=>{const sc=subs.map(b=>avg(s.id,b)),f=sc.filter(x=>x!=null);return{s,sc,mean:f.length?Math.round(f.reduce((a,b)=>a+b,0)/f.length):null}}).sort((a,b)=>(b.mean??-1)-(a.mean??-1));
  const by=b=>[...new Set(ms.filter(k=>k.sub==b).map(k=>k.byName))].join(", "),section=sec(ui.rk);
  return `<h2>Class results</h2><div class="card"><div class="row"><label>Class<select onchange="ui.rk=this.value;render()">${opts(cs,ui.rk)}</select></label>
- <label>Term<select onchange="ui.rt=this.value;render()">${opts(TERMS,ui.rt)}</select></label><button class="b alt" onclick="exportTable('rs','results-'+ui.rk+'-'+ui.rt)">Download Excel (CSV)</button></div>
+ <label>Term<select onchange="ui.rt=this.value;render()">${opts(TERMS,ui.rt)}</select></label><button class="b alt" onclick="exportTable('rs','results-'+ui.rk+'-'+ui.rt)">Download Excel (CSV)</button>
+ <button class="b" onclick="ui.rr='Result slip';ui.rc=ui.rk;ui.sl='all';ui.st=ui.rt;go('Reports')">Print result slips</button></div>
  ${subs.length?table(["Rank","Student",...subs.map(b=>`<span title="Entered by ${esc(by(b))}">${esc(b)}</span>`),"Mean","Level"],rows.map((r,i)=>[r.mean==null?"–":i+1,esc(r.s.name),...r.sc.map(x=>x==null?"–":x+" "+level(x,section)),r.mean==null?"–":`<b>${r.mean}</b>`,r.mean==null?"–":`<b>${level(r.mean,section)}</b>`]),"rs"):`<div class="empty">No marks entered for this class and term yet.</div>`}</div>
  <p style="color:var(--mute);font-size:13px">Hover over a subject heading to see which teacher entered it.</p>`};
 function exportTable(id,name){const t=$(id);if(!t)return toast("Nothing to download yet");
  saveBlob(new Blob([toCsv([...t.querySelectorAll("tr")].map(r=>[...r.children].map(c=>c.textContent.trim())))],{type:"text/csv;charset=utf-8"}),name+".csv")}
 
+/* ---------- result slip helpers (Learner Assessment Report) ---------- */
+const PTS={Primary:{EE:4,ME:3,AE:2,BE:1},JSS:{EE1:8,EE2:7,ME1:6,ME2:5,AE1:4,AE2:3,BE1:2,BE2:1}};
+const RM={
+ E:["You have done outstanding work this term. Keep it up!","Excellent results. Keep aiming high."],
+ M:["You've been consistent this term. With continued effort, you'll achieve excellence.","Your results show potential. Keep pushing to unlock your full abilities."],
+ A:["You are making progress. More practice will lift your results.","Results are approaching expectation. Extra revision and support will help."],
+ B:["Please put in more effort and ask for help where you struggle.","Close support from school and home is needed to improve."]};
+const SUBREM={E:"Outstanding performance",M:"Meets expectation, keep refining",A:"Approaching expectation, keep practising",B:"Needs extra support"};
+const abbr=n=>{const w=n.replace(/&/g," ").split(/\s+/).filter(Boolean);return(w.length==1?w[0].slice(0,3):w.map(x=>x[0]).join("").slice(0,3)).toUpperCase()};
+const fdate=d=>d?new Date(d).toLocaleDateString("en-GB"):"____________";
+
+function slipData(s,term,ass){
+ const section=sec(s.cls),g=grade(s.cls),pool=active().filter(x=>grade(x.cls)==g);
+ const mm=S.marks.filter(k=>k.term==term&&k.ass==ass);
+ const sub=(id,b)=>mm.find(k=>k.sid==id&&k.sub==b);
+ const tot=id=>mm.filter(k=>k.sid==id).reduce((a,k)=>a+k.score,0);
+ const rows=mm.filter(k=>k.sid==s.id).map(k=>{
+  const peers=pool.map(x=>sub(x.id,k.sub)).filter(Boolean),lv=level(k.score,section);
+  return{sub:k.sub,score:k.score,lv,p:PTS[section][lv],rank:peers.filter(q=>q.score>k.score).length+1,of:peers.length,comment:k.comment,by:k.byName||""}});
+ const mine=tot(s.id);
+ const ranked=list=>{const have=list.filter(x=>mm.some(k=>k.sid==x.id));return[have.filter(x=>tot(x.id)>mine).length+1,have.length]};
+ const n=rows.length,mean=n?Math.round(mine/n):null;
+ const byTerm=TERMS.map(t=>({t,p:S.marks.filter(k=>k.sid==s.id&&k.term==t&&k.ass==ass).reduce((a,k)=>a+PTS[section][level(k.score,section)],0)})).filter(x=>x.p>0);
+ return{rows,section,total:mine,marksMax:n*100,mean,lvl:n?level(mean,section):"–",
+  points:rows.reduce((a,r)=>a+r.p,0),pointsMax:n*(section=="Primary"?4:8),
+  stream:ranked(pool.filter(x=>x.cls==s.cls)),overall:ranked(pool),byTerm}}
+
+function lineSvg(rows){
+ const W=420,H=150,L=28,R=10,T=8,B=22,n=rows.length;if(!n)return"";
+ const x=i=>L+(n==1?(W-L-R)/2:i*(W-L-R)/(n-1)),y=q=>T+(H-T-B)*(1-q/100);
+ const line=rows.map((r,i)=>x(i)+","+y(r.score)).join(" ");
+ return `<svg viewBox="0 0 ${W} ${H}" width="100%">`
+ +[0,20,40,60,80,100].map(q=>`<line x1="${L}" x2="${W-R}" y1="${y(q)}" y2="${y(q)}" stroke="#e5e7eb"/><text x="${L-4}" y="${y(q)+3}" font-size="9" text-anchor="end" fill="#555">${q}</text>`).join("")
+ +`<polygon points="${x(0)},${y(0)} ${line} ${x(n-1)},${y(0)}" fill="#9fd9cd"/><polyline points="${line}" fill="none" stroke="#0a9f86" stroke-width="2"/>`
+ +rows.map((r,i)=>`<circle cx="${x(i)}" cy="${y(r.score)}" r="4" fill="#0a9f86" stroke="#fff"/><text x="${x(i)}" y="${H-6}" font-size="9" text-anchor="middle" fill="#333">${esc(abbr(r.sub))}</text>`).join("")+`</svg>`}
+
+function barSvg(bt){
+ if(!bt.length)return"";
+ const W=700,H=150,L=34,B=22,T=10,ymax=Math.max(10,Math.ceil(Math.max(...bt.map(b=>b.p))/10)*10),step=ymax/5;
+ const y=q=>T+(H-T-B)*(1-q/ymax),slot=(W-L)/bt.length,bw=Math.min(slot*.6,170);
+ return `<svg viewBox="0 0 ${W} ${H}" width="100%">`
+ +Array.from({length:6},(_,i)=>i*step).map(q=>`<line x1="${L}" x2="${W}" y1="${y(q)}" y2="${y(q)}" stroke="#e5e7eb"/><text x="${L-5}" y="${y(q)+3}" font-size="10" text-anchor="end" fill="#555">${q}</text>`).join("")
+ +bt.map((b,i)=>{const cx=L+slot*i+slot/2;return `<rect x="${cx-bw/2}" y="${y(b.p)}" width="${bw}" height="${y(0)-y(b.p)}" fill="#0a9f86"/><text x="${cx}" y="${y(b.p)-3}" font-size="10" font-weight="700" text-anchor="middle">${b.p}</text><text x="${cx}" y="${H-6}" font-size="10" text-anchor="middle" fill="#333">${esc(b.t)}</text>`}).join("")+`</svg>`}
+
+function slipHTML(s,term,ass){
+ const d=slipData(s,term,ass);if(!d.rows.length)return"";
+ const ct=(S.users||[]).find(u=>u.ct===s.cls),ix=d.lvl[0],yr=new Date().getFullYear();
+ const pad=Array.from({length:Math.max(0,10-d.rows.length)},()=>`<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join("");
+ return `<div class="slip">
+ <div class="sl-h">
+  <div class="sl-logo">🏫<small>${esc(SCHOOL)}</small></div>
+  <div class="sl-mid"><h1>${esc(SCHOOL)}</h1><span class="sl-ban">LEARNER ASSESSMENT REPORT</span></div>
+  <div class="sl-ch"><div class="ct">Subject performance</div>${lineSvg(d.rows)}</div>
+ </div>
+ <div class="sl-name"><span>NAME: <b>${esc(s.name.toUpperCase())}</b></span><span>CLASS: <b>${esc(s.cls.toUpperCase())}</b></span><span>ADM No: <b>${esc(s.adm)}</b></span></div>
+ <div class="sl-two">
+  <div><h4>Exam details</h4><div>EXAM: <b>${esc(ass)}</b></div><div>TERM: <b>${esc(term.replace("Term ",""))}, YEAR ${yr}</b></div></div>
+  <div><h4>Performance summary</h4><div class="sl-kv">
+   <span>MARKS: <b>${d.total}/${d.marksMax}</b></span><span>STREAM POSITION: <b>${d.stream[0]}/${d.stream[1]}</b></span>
+   <span>LEVEL: <b>${d.lvl}</b></span><span>POINTS: <b>${d.points}/${d.pointsMax}</b></span><span>OVERALL POSITION: <b>${d.overall[0]}/${d.overall[1]}</b></span></div></div>
+ </div>
+ <table class="sl-tbl"><tr><th>Learning Area</th><th>Marks</th><th>% Score</th><th>Rank</th><th>Points</th><th>Comments</th><th>Instructor</th></tr>
+ ${d.rows.map(r=>`<tr><td>${esc(r.sub)}</td><td>${r.score}/100</td><td>${r.score} <b>${r.lv}</b></td><td>${r.rank}/${r.of}</td><td>${r.p}</td><td>${esc(r.comment||SUBREM[r.lv[0]])}</td><td>${esc(r.by)}</td></tr>`).join("")}${pad}</table>
+ <div class="sl-cm"><b>Class Teacher's comments:</b><span contenteditable="true">${RM[ix][0]}</span></div>
+ <div class="sl-cm"><b>HOI's comments:</b><span contenteditable="true">${RM[ix][1]}</span></div>
+ <div class="sl-bars"><div class="ct">Learner's performance (Total Points) over time</div>${barSvg(d.byTerm)}</div>
+ <div class="sl-sig"><div>HOI's Signature</div><div>Parent's Signature</div><div>Class Teacher's Signature<br><b>${esc(ct?ct.name.toUpperCase():"")}</b></div></div>
+ <div class="sl-dt"><span>Generated on: <b>${new Date().toLocaleString("en-GB")}</b></span><span>This term closing date: <b>${fdate(ui.sc)}</b></span><span>Next term opening date: <b>${fdate(ui.so)}</b></span></div>
+ <div class="sl-ft">${esc(SCHOOL)} – Learner Assessment Report</div></div>`}
+
+const slipControls=kids=>`<label>Student<select onchange="ui.sl=this.value=='all'?'all':+this.value;render()"><option value="all" ${ui.sl==="all"?"selected":""}>All in class (print all)</option>${kids.map(x=>`<option value="${x.id}" ${x.id==ui.sl?"selected":""}>${esc(x.name)} – ${esc(x.cls)}</option>`).join("")}</select></label>
+ <label>Term<select onchange="ui.st=this.value;render()">${opts(TERMS,ui.st||"Term 1")}</select></label>
+ <label>Exam<input value="${esc(ui.sa||"End of term")}" onchange="ui.sa=this.value;render()"></label>
+ <label>Closing date<input type="date" value="${ui.sc||""}" onchange="ui.sc=this.value;render()"></label>
+ <label>Next term opens<input type="date" value="${ui.so||""}" onchange="ui.so=this.value;render()"></label>`;
+
 /* ---------- reports ---------- */
-const REPORTS_BY={admin:["Student list","Class list","Attendance report","Academic report","Fee statements","Parent fee statement","Fees by item","Fee arrears","Teacher report","School performance"],
+const REPORTS_BY={admin:["Result slip","Student list","Class list","Attendance report","Academic report","Fee statements","Parent fee statement","Fees by item","Fee arrears","Teacher report","School performance"],
 bursar:["Student list","Class list","Fee statements","Parent fee statement","Fees by item","Fee arrears"],
-teacher:["Student list","Class list","Attendance report","Academic report"]};
+teacher:["Result slip","Student list","Class list","Attendance report","Academic report"]};
 V.Reports=()=>{const R=REPORTS_BY[S.me.role];ui.rr=R.includes(ui.rr)?ui.rr:R[0];
  const cs=["All classes",...(S.me.role==="teacher"?myCls():classes())];ui.rc=cs.includes(ui.rc)?ui.rc:"All classes";
  ui.rs=active().some(x=>x.id==ui.rs)?ui.rs:(active()[0]&&active()[0].id);
@@ -927,6 +1221,11 @@ V.Reports=()=>{const R=REPORTS_BY[S.me.role];ui.rr=R.includes(ui.rr)?ui.rr:R[0];
  const att=id=>{let p=0,t=0;for(const k in S.att)if(S.att[k][id]){t++;if(S.att[k][id]!="A")p++}return t?Math.round(p/t*100)+"%":"–"};
  const bl=s=>`<span class="${bal(s)>0?"neg":"pos"}">${ksh(bal(s))}</span>`;
  switch(ui.rr){
+ case"Result slip":{
+  if(ui.sl!=="all"&&!kids.some(x=>x.id==ui.sl))ui.sl=kids[0]?kids[0].id:"all";
+  const T0=ui.st||"Term 1",A0=ui.sa||"End of term";
+  const list=ui.sl==="all"?kids:kids.filter(x=>x.id==ui.sl);
+  body=list.map(s=>slipHTML(s,T0,A0)).join("")||`<div class="empty">No marks entered for ${esc(T0)} – ${esc(A0)} yet. Enter them under "Enter marks" first.</div>`;break}
  case"Student list":body=table(["Adm no.","Name","Class","Section","Status"],S.students.map(s=>[s.adm,esc(s.name),esc(s.cls),sec(s.cls),s.status]));break;
  case"Class list":body=table(["Adm no.","Name","Gender","Class","Guardian"],kids.map(s=>[s.adm,esc(s.name),s.gender,esc(s.cls),esc(s.guardian)]));break;
  case"Attendance report":body=table(["Student","Class","Attendance rate"],kids.map(s=>[esc(s.name),esc(s.cls),att(s.id)]));break;
@@ -944,11 +1243,12 @@ V.Reports=()=>{const R=REPORTS_BY[S.me.role];ui.rr=R.includes(ui.rr)?ui.rr:R[0];
  case"Fee arrears":body=table(["Student","Class","Parent/guardian","Phone","Paid for","Balance"],kids.filter(s=>bal(s)>0).sort((a,b)=>bal(b)-bal(a)).map(s=>[esc(s.name),esc(s.cls),esc(s.guardian),esc(s.phone),paidFor(s.id),`<span class="neg">${ksh(bal(s))}</span>`]));break;
  case"Teacher report":body=table(["Name","Username","Classes","Subjects","Class teacher of"],S.users.filter(u=>u.role==="teacher").map(u=>[esc(u.name),esc(u.username),esc(u.classes.join(", ")),esc(u.subjects.join(", ")),esc(u.ct||"–")]));break;
  case"School performance":body=table(["Section","Students","Average score","Level"],["Primary","JSS"].map(x=>{const ids=active().filter(s=>sec(s.cls)==x).map(s=>s.id),m=S.marks.filter(k=>ids.includes(k.sid)),a=m.length?Math.round(m.reduce((q,k)=>q+k.score,0)/m.length):null;return [x,ids.length,a==null?"–":a,a==null?"–":level(a,x)]}));break}
- const pick=ui.rr=="Parent fee statement"?`<label>Student<select onchange="ui.rs=+this.value;render()">${active().map(x=>`<option value="${x.id}" ${x.id==ui.rs?"selected":""}>${esc(x.name)} – ${esc(x.cls)}</option>`).join("")}</select></label>`:"";
+ const pick=ui.rr=="Parent fee statement"?`<label>Student<select onchange="ui.rs=+this.value;render()">${active().map(x=>`<option value="${x.id}" ${x.id==ui.rs?"selected":""}>${esc(x.name)} – ${esc(x.cls)}</option>`).join("")}</select></label>`:ui.rr=="Result slip"?slipControls(kids):"";
+ const slipMode=ui.rr=="Result slip";
  return `<h2>Reports</h2><div class="card noprint"><div class="row"><label>Report<select onchange="ui.rr=this.value;render()">${opts(R,ui.rr)}</select></label>${pick}
  <label>Class<select onchange="ui.rc=this.value;render()">${opts(cs,ui.rc)}</select></label></div>
  <div class="row"><button class="b" onclick="downloadReport()">Download Excel (CSV)</button><button class="b" onclick="downloadReportDoc()">Download Word</button><button class="b alt" onclick="window.print()">Download PDF / Print</button></div></div>
- <div class="card"><div class="letter"><b>${SCHOOL}</b><span>${new Date().toLocaleDateString()}</span></div><h3 style="margin-top:0">${esc(repTitle())}</h3><div id="repbody">${body}</div></div>`};
+ <div class="${slipMode?"":"card"}">${slipMode?"":`<div class="letter"><b>${SCHOOL}</b><span>${new Date().toLocaleDateString()}</span></div><h3 style="margin-top:0">${esc(repTitle())}</h3>`}<div id="repbody">${body}</div></div>`};
 function repTitle(){if(ui.rr=="Parent fee statement"){const s=S.students.find(x=>x.id==ui.rs);return ui.rr+(s?" - "+s.name:"")}return ui.rr+(ui.rc!="All classes"?" - "+ui.rc:"")}
 function repFile(){return repTitle().toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+new Date().toISOString().slice(0,10)}
 function downloadReport(){if(!document.querySelector("#repbody table"))return toast("Nothing to download for this report yet");
