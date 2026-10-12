@@ -3,6 +3,9 @@ const Database = require("better-sqlite3");
 const path = require("path");
 const crypto = require("crypto");
 
+/* Default login (change it after signing in): admin / admin123 */
+const DEFAULT_ADMIN_PASSWORD = "admin123";
+
 const db = new Database(path.join(__dirname, "school.db"));
 db.pragma("journal_mode = WAL");
 db.exec(`
@@ -38,36 +41,50 @@ db.prepare("INSERT OR IGNORE INTO classes SELECT DISTINCT " + CLS + " FROM stude
 
 /* ---------- passwords ---------- */
 const hash = (pw, salt) => crypto.scryptSync(pw, salt, 32).toString("hex");
-const safeEq = (a, b) => { const x = Buffer.from(String(a)),
-        y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y) };
-const newPw = () => crypto.randomBytes(7).toString("base64url");
+const safeEq = (a, b) => {
+    const x = Buffer.from(String(a)),
+        y = Buffer.from(String(b));
+    return x.length === y.length && crypto.timingSafeEqual(x, y)
+};
 
-function setPw(rowid, pw) { const salt = crypto.randomBytes(16).toString("hex");
-    db.prepare("UPDATE users SET salt = ?, hash = ? WHERE rowid = ?").run(salt, hash(pw, salt), rowid) }
+function setPw(rowid, pw) {
+    const salt = crypto.randomBytes(16).toString("hex");
+    db.prepare("UPDATE users SET salt = ?, hash = ? WHERE rowid = ?").run(salt, hash(pw, salt), rowid)
+}
 
 function addUser(username, name, role, pw, approved, classes, subjects) {
     const salt = crypto.randomBytes(16).toString("hex");
     return db.prepare("INSERT INTO users (username, name, role, salt, hash, approved, classes, subjects, ct) VALUES (?,?,?,?,?,?,?,?, '')")
         .run(username, name, role, salt, hash(pw, salt), approved ? 1 : 0, JSON.stringify(classes || []), JSON.stringify(subjects || []));
 }
+
+// First run: create the admin account
 if (!db.prepare("SELECT 1 FROM users").get()) {
-    const pw = process.env.ADMIN_PASSWORD || newPw();
+    const pw = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
     addUser("admin", "Administrator", "admin", pw, true);
     console.log("FIRST RUN - admin login: admin /", pw, "(change it after signing in)");
 }
-// Replace the old built-in passwords (admin123, teacher123, bursar123) if they are still in use
-for (const [un, old] of Object.entries({ admin: "admin123", teacher: "teacher123", bursar: "bursar123" })) {
-    const u = db.prepare("SELECT rowid AS id, * FROM users WHERE username = ?").get(un);
-    if (u && safeEq(hash(old, u.salt), u.hash)) { const p = newPw();
-        setPw(u.id, p);
-        console.log('SECURITY: the default password for "' + un + '" was replaced. New password:', p) }
-}
+
+// Run "node server.js --reset-admin" to set the admin password back to admin123
+// (or to the ADMIN_PASSWORD environment variable if you set one)
 if (process.argv.includes("--reset-admin")) {
     const a = db.prepare("SELECT rowid AS id, username FROM users WHERE role = 'admin' ORDER BY rowid LIMIT 1").get();
-    const p = process.env.ADMIN_PASSWORD || newPw();
-    setPw(a.id, p);
-    db.prepare("UPDATE users SET approved = 1 WHERE rowid = ?").run(a.id);
-    console.log("ADMIN PASSWORD RESET - login: " + a.username + " / " + p);
+    if (!a) {
+        addUser("admin", "Administrator", "admin", process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD, true);
+        console.log("ADMIN CREATED - login: admin / " + (process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD));
+    } else {
+        const p = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
+        setPw(a.id, p);
+        db.prepare("UPDATE users SET approved = 1 WHERE rowid = ?").run(a.id);
+        console.log("ADMIN PASSWORD RESET - login: " + a.username + " / " + p);
+    }
+}
+
+// Friendly reminder while the default password is still in use
+{
+    const a = db.prepare("SELECT salt, hash FROM users WHERE username = 'admin'").get();
+    if (a && safeEq(hash(DEFAULT_ADMIN_PASSWORD, a.salt), a.hash))
+        console.log("NOTE: the admin account still uses the default password (admin123). Change it under Staff & classes > Change my password.");
 }
 
 /* ---------- reading data (each role gets only what it needs) ---------- */
@@ -99,7 +116,10 @@ function view(u) {
         mine = new Set([...p.classes, p.ct].filter(Boolean));
     const st = students.filter(s => mine.has(s.cls)),
         ids = new Set(st.map(s => s.id));
-    return Object.assign(out, { students: st, pay: [], marks: marks.filter(m => ids.has(m.sid) && (m.cls === p.ct || m.by === u.id)), att: p.ct ? getAtt(p.ct) : {} });
+    // Teachers only need the names of class teachers (shown on result slips), nothing else about other staff
+    const staff = getUsers().filter(x => x.role === "teacher" && x.approved && x.ct)
+        .map(x => ({ id: x.id, name: x.name, role: "teacher", approved: true, classes: [], subjects: [], ct: x.ct }));
+    return Object.assign(out, { students: st, pay: [], users: staff, marks: marks.filter(m => ids.has(m.sid) && (m.cls === p.ct || m.by === u.id)), att: p.ct ? getAtt(p.ct) : {} });
 }
 
 /* ---------- actions (every change is checked against the user's role) ---------- */
@@ -220,8 +240,10 @@ const A = {
         if (!t) throw E(404, "User not found");
         if ("approved" in b && t.role !== "admin") db.prepare("UPDATE users SET approved = ? WHERE rowid = ?").run(b.approved ? 1 : 0, t.id);
         if ("ct" in b && t.role === "teacher") {
-            if (b.ct) { cl(b.ct);
-                db.prepare("UPDATE users SET ct = '' WHERE ct = ?").run(b.ct) }
+            if (b.ct) {
+                cl(b.ct);
+                db.prepare("UPDATE users SET ct = '' WHERE ct = ?").run(b.ct)
+            }
             db.prepare("UPDATE users SET ct = ? WHERE rowid = ?").run(b.ct || "", t.id);
         }
         if (b.approved === false)
@@ -255,8 +277,10 @@ const A = {
             db.prepare("INSERT INTO timetable VALUES (?,?,?,?,?,?,?)").run(id, c, b.day, p, sub, T(b.teacher, 60), T(b.room, 10));
         })();
     },
-    "tt.del": (u, b) => { need(u, "admin");
-        db.prepare("DELETE FROM timetable WHERE id = ?").run(b.id) }
+    "tt.del": (u, b) => {
+        need(u, "admin");
+        db.prepare("DELETE FROM timetable WHERE id = ?").run(b.id)
+    }
 };
 
 /* ---------- web server ---------- */
@@ -280,8 +304,10 @@ const tries = new Map();
 function limit(req, res, next) {
     const ip = req.socket.remoteAddress,
         t = tries.get(ip) || { n: 0, t: Date.now() };
-    if (Date.now() - t.t > 9e5) { t.n = 0;
-        t.t = Date.now() }
+    if (Date.now() - t.t > 9e5) {
+        t.n = 0;
+        t.t = Date.now()
+    }
     if (t.n >= 10) return res.status(429).json({ error: "Too many attempts. Try again in 15 minutes." });
     t.n++;
     tries.set(ip, t);
@@ -333,8 +359,10 @@ function fail(res, err) {
 }
 
 app.get("/api/data", auth, (req, res) => { try { res.json(view(req.user)) } catch (err) { fail(res, err) } });
-app.post("/api/logout", auth, (req, res) => { sessions.delete(req.token);
-    res.json({ ok: true }) });
+app.post("/api/logout", auth, (req, res) => {
+    sessions.delete(req.token);
+    res.json({ ok: true })
+});
 app.post("/api/act", auth, (req, res) => {
     try {
         const f = A[(req.body || {}).a];
